@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kodio — цифрові коди для ігор і підписок</title>
+<meta name="description" content="Kodio: коди поповнення Steam, PlayStation, Xbox та інших сервісів. Магазин у підготовці, запуск найближчим часом.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎟️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700;800&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+<style>
+  /* Палитра: холодный белый, чернильный синий, электрик-синий, мягкая линия */
+  :root {
+    --bg: #f2f5fa;
+    --ink: #14213d;
+    --muted: #55627a;
+    --accent: #2f5bff;
+    --line: #d5ddec;
+    --card: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: "Onest", system-ui, sans-serif; line-height: 1.55;
+  }
+  a { color: var(--accent); }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 22px; }
+
+  header { padding: 22px 0; }
+  .logo { font-weight: 800; font-size: 22px; letter-spacing: -.02em; }
+
+  /* Hero: билет-купон с кодом — единственный "громкий" элемент страницы */
+  .hero { display: grid; gap: 40px; align-items: center; padding: 36px 0 56px; }
+  @media (min-width: 800px) { .hero { grid-template-columns: 1.1fr .9fr; padding-top: 56px; } }
+  h1 { font-size: clamp(30px, 5.6vw, 52px); line-height: 1.08; letter-spacing: -.03em; margin: 0 0 18px; font-weight: 800; }
+  .lead { font-size: 18px; color: var(--muted); max-width: 46ch; margin: 0 0 22px; }
+  .status { display: inline-block; background: var(--ink); color: #fff; padding: 8px 14px; border-radius: 999px; font-weight: 500; font-size: 15px; }
+
+  .ticket {
+    background: var(--card); border: 1px solid var(--line); border-radius: 18px;
+    padding: 28px 26px 26px; position: relative; box-shadow: 0 18px 40px -22px rgba(20,33,61,.35);
+    transform: rotate(-2deg);
+  }
+  /* "вырезы" по бокам купона */
+  .ticket::before, .ticket::after {
+    content: ""; position: absolute; top: 58%; width: 26px; height: 26px; border-radius: 50%;
+    background: var(--bg); border: 1px solid var(--line);
+  }
+  .ticket::before { left: -14px; }
+  .ticket::after { right: -14px; }
+  .ticket .label { margin: 0 0 6px; color: var(--muted); font-size: 14px; }
+  .ticket .value { font-size: 44px; font-weight: 800; letter-spacing: -.03em; margin: 0 0 22px; }
+  .ticket hr { border: 0; border-top: 2px dashed var(--line); margin: 0 0 22px; }
+  .code { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 600; font-size: clamp(17px, 3.4vw, 22px); letter-spacing: .08em; color: var(--accent); margin: 0; }
+
+  section { padding: 36px 0; border-top: 1px solid var(--line); }
+  h2 { font-size: 26px; letter-spacing: -.02em; margin: 0 0 14px; }
+  .platforms { display: flex; flex-wrap: wrap; gap: 10px; padding: 0; margin: 0; list-style: none; }
+  .platforms li { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px 16px; font-weight: 500; }
+
+  .steps { counter-reset: s; display: grid; gap: 14px; padding: 0; margin: 0; list-style: none; }
+  @media (min-width: 700px) { .steps { grid-template-columns: repeat(3, 1fr); } }
+  .steps li { counter-increment: s; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+  .steps li::before { content: counter(s); display: block; font-weight: 800; font-size: 26px; color: var(--accent); margin-bottom: 4px; }
+
+  .contacts p { margin: 0 0 8px; }
+  footer { padding: 30px 0 46px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); }
+  footer p { margin: 0 0 6px; max-width: 70ch; }
+
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><span class="logo">Kodio</span></header>
+
+  <main>
+    <div class="hero">
+      <div>
+        <h1>Цифрові коди для ігор і підписок</h1>
+        <p class="lead">Коди поповнення для Steam, PlayStation, Xbox та інших сервісів. Купуєте номінал, оплачуєте карткою, отримуєте код.</p>
+        <span class="status">Магазин у підготовці. Запуск найближчим часом</span>
+      </div>
+      <div class="ticket" aria-hidden="true">
+        <p class="label">Подарункова картка</p>
+        <p class="value">100 ₴</p>
+        <hr>
+        <p class="code" id="code">XXXX-XXXX-XXXX</p>
+      </div>
+    </div>
+
+    <section>
+      <h2>Що буде в каталозі</h2>
+      <ul class="platforms">
+        <li>Steam</li>
+        <li>PlayStation Network</li>
+        <li>Xbox</li>
+        <li>Nintendo eShop</li>
+        <li>Стрімінгові сервіси</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Як це працюватиме</h2>
+      <ol class="steps">
+        <li>Обираєте платформу і номінал</li>
+        <li>Оплачуєте карткою на сайті або в Telegram-боті</li>
+        <li>Отримуєте код і активуєте його у своєму акаунті</li>
+      </ol>
+    </section>
+
+    <section class="contacts">
+      <h2>Зв'язок</h2>
+      <!-- ЗАМІНИ ці дві адреси на свої -->
+      <p>Пошта: <a href="mailto:ВАШ_EMAIL@example.com">ВАШ_EMAIL@example.com</a></p>
+      <p>Telegram: <a href="https://t.me/ВАШ_БОТ">@ВАШ_БОТ</a></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 Kodio</p>
+    <p>Усі торгові марки належать їхнім власникам. Магазин не пов'язаний з Valve, Sony, Microsoft чи Nintendo.</p>
+  </footer>
+</div>
+
+<script>
+  // Єдиний рух на сторінці: код на купоні "проявляється" один раз при завантаженні.
+  // Якщо у користувача увімкнено "зменшити рух" — залишаємо статичний текст.
+  (function () {
+    var el = document.getElementById("code");
+    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var target = "K7QD-9M2X-B4TA", chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789", i = 0;
+    var timer = setInterval(function () {
+      var out = "";
+      for (var k = 0; k < target.length; k++) {
+        if (target[k] === "-") out += "-";
+        else out += k < i ? target[k] : chars[Math.floor(Math.random() * chars.length)];
+      }
+      el.textContent = out;
+      if (++i > target.length) { clearInterval(timer); el.textContent = target; }
+    }, 70);
+  })();
+</script>
+</body>
+</html>
